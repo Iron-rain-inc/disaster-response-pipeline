@@ -6,7 +6,11 @@ import re
 from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):    
-    
+    """
+    Takes in the filepath of a message and categories filepath and returns a dataframe.
+    messages_filepath - Filepath to messages csv
+    categories_filepath - Filepath to categories csv
+    """
     messages = pd.read_csv(messages_filepath)
     categories = pd.read_csv(categories_filepath)
     
@@ -29,11 +33,20 @@ def load_data(messages_filepath, categories_filepath):
 
 
 def clean_data(df):
+    """
+    Cleans message data, drops duplicates
+    df - message dataframe
+    """
     df = df.drop_duplicates()
     return df
 
 
 def save_data(df, database_filename):
+    """
+    Saves a dataframe to a sql file
+    df - dataframe to save
+    database_filename - filepath to save the database to
+    """
     engine = create_engine('sqlite:///data/DisasterResponse.db')  
     df.to_sql('MessageData', engine, index=False)
 

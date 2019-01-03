@@ -43,6 +43,23 @@ def index():
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
     
+    msg_class = []
+    msg_count = []
+    cat = df.drop(['id','message','original','genre'], axis=1)
+    for col in cat:
+        labels = cat[col].value_counts().name
+        vals = cat[col].value_counts().keys().tolist()
+        counts = cat[col].value_counts().tolist()
+    
+        if len(vals) > 1:
+            msg_class.append(labels)
+            msg_count.append(counts[1])        
+        else:
+            msg_class.append(labels)
+            msg_count.append(0)
+    
+    count_orig = [len(df[df['message'] == df['original']]), len(df[df['message'] != df['original']])]
+        
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
     graphs = [
@@ -61,6 +78,44 @@ def index():
                 },
                 'xaxis': {
                     'title': "Genre"
+                }
+            }
+        },
+        
+        {
+            'data': [
+                Bar(
+                    x=msg_class,
+                    y=msg_count
+                )
+            ],
+
+            'layout': {
+                'title': 'Distribution of Message by Type',
+                'yaxis': {
+                    'title': "Count"
+                },
+                'xaxis': {
+                    'title': "Message Classification"
+                }
+            }
+        },
+        
+        {
+            'data': [
+                Bar(
+                    x=["Original", "Translated"],
+                    y=count_orig
+                )
+            ],
+
+            'layout': {
+                'title': 'Original vs Translated',
+                'yaxis': {
+                    'title': "Count"
+                },
+                'xaxis': {
+                    'title': "Message Type"
                 }
             }
         }

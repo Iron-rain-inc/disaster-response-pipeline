@@ -34,6 +34,10 @@ from pactools.grid_search import GridSearchCVProgressBar
 
 
 def load_data(database_filepath):
+    """
+    Load data from a database and output an X,Y dataframe as well as labels
+    database_filepath - Filepath to the database to be loaded
+    """
     database_filepath = 'sqlite:///' + database_filepath    
     
     engine = create_engine(database_filepath)
@@ -46,7 +50,10 @@ def load_data(database_filepath):
     return X, Y, category_names
 
 
-def tokenize(text):    
+def tokenize(text):
+    """
+    Text tokenizer to use with vect function    
+    """
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
     
@@ -60,6 +67,9 @@ def tokenize(text):
 
 
 def build_model():    
+    """
+    Builds a model, runs through paramaters with GridSearch and loads the best set
+    """
     pipeline = Pipeline([
         ('features', FeatureUnion([
             ('text_pipeline', Pipeline([
@@ -91,6 +101,13 @@ def build_model():
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
+    """
+    Evaluates the model, determines model accuracy per category
+    model - trained model 
+    X_test - testing data subset
+    Y_test - testing data subset
+    category_names - names to be used for labels
+    """
     y_pred = model.predict(X_test)
     
     labels = category_names
@@ -103,6 +120,9 @@ def evaluate_model(model, X_test, Y_test, category_names):
 
 
 def save_model(model, model_filepath):
+    """
+    Saves the model to pickle file for use at a later date
+    """
     pickle.dump(model, open(model_filepath, 'wb'))
 
 
