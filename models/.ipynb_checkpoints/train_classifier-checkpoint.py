@@ -17,6 +17,7 @@ from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline, FeatureUnion
 from sklearn.multioutput import MultiOutputClassifier
@@ -89,7 +90,7 @@ def build_model():
             {'text_pipeline': 0.5},
             {'text_pipeline': 0.2}
         ),
-        'clf__estimator__estimator__n_jobs': [50],# 100, 200],
+        'clf__estimator__estimator__n_jobs': [50, 100, 200],
         'clf__estimator__estimator__alpha': [0.0001] #0.001,0.01]    
     }
 
@@ -108,16 +109,20 @@ def evaluate_model(model, X_test, Y_test, category_names):
     Y_test - testing data subset
     category_names - names to be used for labels
     """
+    #y_pred = model.predict(X_test)
+    
+    #labels = category_names
+    
+    #accuracy = (y_pred == Y_test).mean()
+    
+    #print("Labels:", labels)
+    
+    #print("Accuracy:", accuracy)    
     y_pred = model.predict(X_test)
-    
-    labels = category_names
-    
-    accuracy = (y_pred == Y_test).mean()
-    
-    print("Labels:", labels)
-    
-    print("Accuracy:", accuracy)    
-
+    print('\n')
+    print('##### Classification Report #####')           
+    print(classification_report(Y_test, y_pred, target_names=category_names))    
+    print('\n')
 
 def save_model(model, model_filepath):
     """
